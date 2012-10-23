@@ -9,12 +9,14 @@ public class LANBroadcasterThread extends Thread {
 
     public LANBroadcasterThread(LANBroadcaster plugin) {
         super("LANBroadcaster");
-        setDaemon(true);
         this.parent = plugin;
         try {
             socket = new DatagramSocket();
         } catch (Exception e) {
             e.printStackTrace();
+            parent.getLogger().severe("Host does not support datagram sockets; disabling.");
+            parent.getPluginLoader().disablePlugin(parent);
+            running = false;
         }
     }
 
@@ -22,28 +24,42 @@ public class LANBroadcasterThread extends Thread {
     public void interrupt() {
         super.interrupt();
         running = false;
+        socket.close();
     }
 
     @Override
     public void run() {
-        while (!parent.isEnabled())
-            try {
-                sleep(100L);
-            } catch (InterruptedException e) {}
-        String motd = parent.getServer().getMotd();
-        String serverLanIP = parent.getServer().getIp();
-        byte[] ad = ("[MOTD]" + motd + "[/MOTD][AD]" + serverLanIP + "[/AD]").getBytes();
-
-        while (!isInterrupted() && running) {
-            try {
-                socket.send(new DatagramPacket(ad, ad.length, InetAddress.getByName("224.0.2.60"), 4445));
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
+        try {
+            String motd = parent.getServer().getMotd();
+            String serverLanIP = getLanIP() + ":" + parent.getServer().getPort();
+            byte[] ad = ("[MOTD]" + motd + "[/MOTD][AD]" + serverLanIP + "[/AD]").getBytes();
+            DatagramPacket packet = new DatagramPacket(ad, ad.length, InetAddress.getByName("224.0.2.60"), 4445);
+            parent.getLogger().info("Broadcasting " + serverLanIP + " over LAN.");
+            while (!isInterrupted() && running) {
+                try {
+                    socket.send(packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break;
+                }
+                try {
+                    sleep(1500L);
+                } catch (InterruptedException e) {}
             }
-            try {
-                sleep(1500L);
-            } catch (InterruptedException e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getLanIP() throws Exception {
+        if (!parent.getServer().getIp().equals("")) return parent.getServer().getIp();
+        
+        try {
+            return NetworkInterface.getNetworkInterfaces().nextElement().getInetAddresses().nextElement().getHostAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+            parent.getLogger().severe("Could not automatically detect LAN ip, please set server-ip in server.properties.");
+            return InetAddress.getLocalHost().getHostAddress();
         }
     }
 }
