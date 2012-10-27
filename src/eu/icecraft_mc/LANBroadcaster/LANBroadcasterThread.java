@@ -1,6 +1,7 @@
 package eu.icecraft_mc.LANBroadcaster;
 
 import java.net.*;
+import java.util.Enumeration;
 
 public class LANBroadcasterThread extends Thread {
     private LANBroadcaster parent;
@@ -12,6 +13,7 @@ public class LANBroadcasterThread extends Thread {
         this.parent = plugin;
         try {
             socket = new DatagramSocket();
+            socket.setSoTimeout(3000);
         } catch (Exception e) {
             e.printStackTrace();
             parent.getLogger().severe("Host does not support datagram sockets; disabling.");
@@ -53,12 +55,23 @@ public class LANBroadcasterThread extends Thread {
 
     private String getLanIP() throws Exception {
         if (!parent.getServer().getIp().equals("")) return parent.getServer().getIp();
-        
+
         try {
-            return NetworkInterface.getNetworkInterfaces().nextElement().getInetAddresses().nextElement().getHostAddress();
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+
+                while (addresses.hasMoreElements()) {
+                    InetAddress address = addresses.nextElement();
+                    if (address instanceof Inet4Address && !address.isLoopbackAddress()) return address.getHostAddress();
+                }
+            }
+            throw new Exception("No usable IPv4 non-loopback address found");
         } catch (Exception e) {
             e.printStackTrace();
-            parent.getLogger().severe("Could not automatically detect LAN ip, please set server-ip in server.properties.");
+            parent.getLogger().severe("Could not automatically detect LAN IP, please set server-ip in server.properties.");
             return InetAddress.getLocalHost().getHostAddress();
         }
     }
