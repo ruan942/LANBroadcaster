@@ -36,7 +36,7 @@ public class LANBroadcaster implements Runnable {
                         }
                         if (failcount < 5) {
                             plugin.getLogger().warning("Failed to broadcast, trying again in 10 seconds...");
-                        } else {
+                        } else if (failcount == 5) {
                             plugin.getLogger().severe("Broadcasting will not work until the network is fixed. Warnings disabled.");
                         }
                         Thread.sleep(8500);
