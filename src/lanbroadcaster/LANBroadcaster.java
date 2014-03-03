@@ -53,10 +53,8 @@ public class LANBroadcaster implements Runnable {
     }
 
     private byte[] getAd() {
-        String motd = plugin.getServer().getMotd();
-        String ip = getLanIP();
         int port = plugin.getServer().getPort();
-        String ad = ip + ":" + port;
+        String motd = plugin.getServer().getMotd(), ip = getLanIP(), ad = ip + ":" + port;
         if (isBukkit1_6()) {
             ad = String.valueOf(port);
             plugin.getLogger().info("Broadcasting server with port " + ad + " over LAN.");
