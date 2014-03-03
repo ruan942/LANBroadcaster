@@ -1,34 +1,47 @@
-package eu.icecraft_mc.LANBroadcaster;
+package lanbroadcaster;
 
 import java.net.*;
 import java.util.Enumeration;
 
-public class LANBroadcasterThread extends Thread {
-    private LANBroadcaster plugin;
+public class LANBroadcaster implements Runnable {
+    private LANBroadcasterPlugin plugin;
     private DatagramSocket socket;
+    int failcount;
 
-    public LANBroadcasterThread(LANBroadcaster parent) {
-        super("LANBroadcaster");
+    public LANBroadcaster(LANBroadcasterPlugin parent) {
         this.plugin = parent;
         try {
             socket = new DatagramSocket();
             socket.setSoTimeout(3000);
         } catch (Exception e) {
             e.printStackTrace();
-            plugin.getLogger().severe("Host does not support datagram sockets; disabling.");
-            plugin.getPluginLoader().disablePlugin(plugin);
+            plugin.getLogger().severe("Host does not support UDP datagram sockets.");
         }
     }
 
     @Override
     public void run() {
         try {
-            byte[] ad = getAd();
-            DatagramPacket packet = new DatagramPacket(ad, ad.length, InetAddress.getByName("224.0.2.60"), 4445);
-            while (!isInterrupted()) {
-                socket.send(packet);
+            final byte[] ad = getAd();
+            final DatagramSocket socket = this.socket;
+            final DatagramPacket packet = new DatagramPacket(ad, ad.length, InetAddress.getByName("224.0.2.60"), 4445);
+            while (true) {
                 try {
-                    sleep(1500L);
+                    try {
+                        socket.send(packet);
+                        failcount = 0;
+                    } catch (Throwable ex) {
+                        if (failcount++ == 0) {
+                            ex.printStackTrace();
+                        }
+                        if (failcount < 5) {
+                            plugin.getLogger().warning("Failed to broadcast, trying again in 10 seconds...");
+                        } else {
+                            plugin.getLogger().severe("Broadcasting will not work until the network is fixed. Warnings disabled.");
+                        }
+                        Thread.sleep(8500);
+                    }
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -55,7 +68,8 @@ public class LANBroadcasterThread extends Thread {
     }
 
     private String getLanIP() {
-        if (!plugin.getServer().getIp().equals("")) return plugin.getServer().getIp();
+        String configuredIP = plugin.getServer().getIp();
+        if (!configuredIP.equals("")) return configuredIP;
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
@@ -73,6 +87,8 @@ public class LANBroadcasterThread extends Thread {
             try {
                 return InetAddress.getLocalHost().getHostAddress();
             } catch (UnknownHostException ex) {
+                ex.printStackTrace();
+                plugin.getLogger().severe("No network interfaces found!");
                 return "End of the world";
             }
         }
@@ -80,7 +96,7 @@ public class LANBroadcasterThread extends Thread {
 
     private boolean isBukkit1_6() {
         try {
-            Class.forName("org.bukkit.entity.Horse"); // just another class
+            Class.forName("org.bukkit.entity.Horse"); // avoiding CB version parsing hell
             return true;
         } catch (Throwable ex) {
             return false;
