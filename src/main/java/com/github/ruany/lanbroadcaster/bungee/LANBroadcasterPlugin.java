@@ -27,7 +27,6 @@ public class LANBroadcasterPlugin extends Plugin {
         ProxyServer proxy = getProxy();
         Collection<?> listeners = proxy.getConfigurationAdapter().getList("listeners", null);
         for (Object obj : listeners) {
-            getLogger().info(obj.getClass().toString());
             Map<String, Object> map = (Map<String, Object>) obj;
             String host = ((String) map.get("host")).split(":")[0];
             if (host.equals("0.0.0.0") || host.equals("127.0.0.1")) host = "";
