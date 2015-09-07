@@ -1,4 +1,4 @@
-package lanbroadcaster;
+package com.github.ruany.lanbroadcaster;
 
 import lombok.*;
 

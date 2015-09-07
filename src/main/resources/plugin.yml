@@ -1,5 +1,5 @@
 name: LANBroadcaster
-version: 1.6
-main: lanbroadcaster.bukkit.LANBroadcasterPlugin
+version: 1.6.1
+main: com.github.ruany.lanbroadcaster.bukkit.LANBroadcasterPlugin
 author: Ruan
 description: Broadcasts a Minecraft server over LAN.

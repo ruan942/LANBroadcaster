@@ -1,6 +1,6 @@
-package lanbroadcaster.bungee;
+package com.github.ruany.lanbroadcaster.bungee;
 
-import lanbroadcaster.LANBroadcaster;
+import com.github.ruany.lanbroadcaster.LANBroadcaster;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bukkit.ChatColor;
