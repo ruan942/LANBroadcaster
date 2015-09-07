@@ -1,6 +1,6 @@
-package lanbroadcaster.bukkit;
+package com.github.ruany.lanbroadcaster.bukkit;
 
-import lanbroadcaster.LANBroadcaster;
+import com.github.ruany.lanbroadcaster.LANBroadcaster;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
