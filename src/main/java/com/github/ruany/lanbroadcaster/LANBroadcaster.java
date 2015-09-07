@@ -8,8 +8,7 @@ import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 public class LANBroadcaster implements Runnable {
-    public static final String BROADCAST_HOST = "224.0.2.60";
-    public static final int BROADCAST_PORT = 4445;
+    public static final String BROADCAST_HOST = "224.0.2.60:4445";
     private int failcount = 0;
     private final DatagramSocket socket;
     private final int port;
@@ -34,7 +33,8 @@ public class LANBroadcaster implements Runnable {
     public void run() {
         try {
             final byte[] ad = getAd();
-            final DatagramPacket packet = new DatagramPacket(ad, ad.length, InetAddress.getByName(BROADCAST_HOST), BROADCAST_PORT);
+            String[] host = BROADCAST_HOST.split(":");
+            final DatagramPacket packet = new DatagramPacket(ad, ad.length, InetAddress.getByName(host[0]), Integer.parseInt(host[1]));
             broadcast(socket, packet);
         } catch (Exception e) {
             e.printStackTrace();
