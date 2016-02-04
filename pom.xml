@@ -8,7 +8,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <groupId>lanbroadcaster</groupId>
+    <groupId>com.github.ruany.lanbroadcaster</groupId>
     <artifactId>LANBroadcaster</artifactId>
     <version>1.6</version>
 
