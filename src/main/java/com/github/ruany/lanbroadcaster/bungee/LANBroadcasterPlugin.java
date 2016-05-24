@@ -4,7 +4,6 @@ import com.github.ruany.lanbroadcaster.LANBroadcaster;
 import lombok.val;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.bukkit.ChatColor;
 
 import java.util.*;
 
@@ -52,7 +51,7 @@ public class LANBroadcasterPlugin extends Plugin {
         char[] b = text.toCharArray();
         for (int i = 0; i < b.length - 1; i++) {
             if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
-                b[i] = ChatColor.COLOR_CHAR;
+                b[i] = '\u00A7';
                 b[i + 1] = Character.toLowerCase(b[i + 1]);
             }
         }
