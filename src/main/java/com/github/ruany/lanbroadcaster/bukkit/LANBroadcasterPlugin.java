@@ -1,3 +1,4 @@
+/* This file is part of LANBroadcaster (GPL v3 or later), see LICENSE.md */
 package com.github.ruany.lanbroadcaster.bukkit;
 
 import com.github.ruany.lanbroadcaster.LANBroadcaster;
