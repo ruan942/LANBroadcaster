@@ -1,6 +1,7 @@
 package com.github.ruany.lanbroadcaster.bungee;
 
 import com.github.ruany.lanbroadcaster.LANBroadcaster;
+import lombok.val;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bukkit.ChatColor;
@@ -28,12 +29,19 @@ public class LANBroadcasterPlugin extends Plugin {
         Collection<?> listeners = proxy.getConfigurationAdapter().getList("listeners", null);
         for (Object obj : listeners) {
             Map<String, Object> map = (Map<String, Object>) obj;
-            String host = ((String) map.get("host")).split(":")[0];
-            if (host.equals("0.0.0.0") || host.equals("127.0.0.1")) host = "";
-            broadcasters.add(new LANBroadcaster(LANBroadcaster.createSocket(),
-                    (Integer) map.get("query_port"),
+
+            String host = (String) map.get("host");
+            String[] split = host.split(":", 2);
+
+            String addr = split[0];
+            int port = Integer.parseInt(split[1]);
+
+            if (addr.equals("0.0.0.0") || addr.equals("127.0.0.1")) addr = "";
+            val broadcaster = new LANBroadcaster(LANBroadcaster.createSocket(),
+                    port,
                     translateColorCodes((String) map.get("motd")),
-                    host, getLogger()));
+                    addr, getLogger());
+            broadcasters.add(broadcaster);
         }
         for (LANBroadcaster broadcaster : broadcasters) {
             proxy.getScheduler().runAsync(this, broadcaster);
