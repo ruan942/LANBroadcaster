@@ -1,7 +1,7 @@
 # LANBroadcaster - License
 
 ## License
-LANBroadcaster Copyright © Ruan 2016
+LANBroadcaster Copyright © Ruan 2016-2017
 
 LANBroadcaster is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
