@@ -6,6 +6,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bukkitVersion>1.12.2-R0.1-SNAPSHOT</bukkitVersion>
+        <bungeeVersion>1.12-SNAPSHOT</bungeeVersion>
     </properties>
 
     <groupId>com.github.ruany</groupId>
@@ -23,20 +25,20 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
+            <version>${bukkitVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>${bungeeVersion}</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
+            <version>1.16.18</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -76,5 +78,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
