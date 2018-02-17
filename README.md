@@ -1,5 +1,4 @@
-LANBroadcaster
+[LANBroadcaster](https://spigotmc.org/resources/5320/)
 ==============
 
-Bukkit/BungeeCord plugin to broadcast a Minecraft server over LAN.
-https://www.spigotmc.org/resources/lanbroadcaster.5320/
+Broadcasts a Spigot or BungeeCord server over LAN.
